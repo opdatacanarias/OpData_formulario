@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Opdata — Encuesta</title>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; }
+  label { display:block; margin-top:16px; font-weight:bold; }
+  input[type=text], input[type=email], input[type=tel] { width:100%; padding:8px; margin-top:4px; box-sizing:border-box; }
+  fieldset { margin-top:24px; border:1px solid #ccc; padding:12px; }
+  .consent { margin-top:24px; }
+  button { margin-top:24px; padding:12px 24px; }
+  #mensaje { margin-top:24px; font-weight:bold; }
+</style>
+</head>
+<body>
+<h2>Encuesta Opdata</h2>
+<form id="encuesta">
+  <label>Nombre</label>
+  <input type="text" id="nombre" required>
+
+  <label>Teléfono</label>
+  <input type="tel" id="telefono" required>
+
+  <label>Email</label>
+  <input type="email" id="email" required>
+
+  <fieldset>
+    <legend>Empresa A</legend>
+    <label>Pregunta A1</label><input type="text" id="a1">
+    <label>Pregunta A2</label><input type="text" id="a2">
+    <label>Pregunta A3</label><input type="text" id="a3">
+  </fieldset>
+
+  <fieldset>
+    <legend>Empresa B</legend>
+    <label>Pregunta B1</label><input type="text" id="b1">
+    <label>Pregunta B2</label><input type="text" id="b2">
+    <label>Pregunta B3</label><input type="text" id="b3">
+  </fieldset>
+
+  <fieldset>
+    <legend>Empresa C</legend>
+    <label>Pregunta C1</label><input type="text" id="c1">
+    <label>Pregunta C2</label><input type="text" id="c2">
+    <label>Pregunta C3</label><input type="text" id="c3">
+  </fieldset>
+
+  <div class="consent">
+    <input type="checkbox" id="consiente">
+    <label style="display:inline">Acepto que mis datos se compartan con empresas colaboradoras según la <a href="POLITICA_URL" target="_blank">política de privacidad</a></label>
+  </div>
+
+  <button type="submit">Enviar</button>
+</form>
+<div id="mensaje"></div>
+
+<script>
+const WEBAPP_URL = 'URL_DE_TU_WEB_APP'; // pegar acá la URL del Paso 4, una vez publicada
+
+function getParam(name) {
+  return new URLSearchParams(window.location.search).get(name) || '';
+}
+
+document.getElementById('encuesta').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!document.getElementById('consiente').checked) {
+    alert('Necesitás aceptar el consentimiento para continuar.');
+    return;
+  }
+
+  let ip = '';
+  try {
+    const r = await fetch('https://api.ipify.org?format=json');
+    ip = (await r.json()).ip;
+  } catch (err) { ip = 'no disponible'; }
+
+  const datos = {
+    nombre: document.getElementById('nombre').value,
+    telefono: document.getElementById('telefono').value,
+    email: document.getElementById('email').value,
+    local: getParam('local'),
+    consiente: true,
+    ip: ip,
+    a1: document.getElementById('a1').value, a2: document.getElementById('a2').value, a3: document.getElementById('a3').value,
+    b1: document.getElementById('b1').value, b2: document.getElementById('b2').value, b3: document.getElementById('b3').value,
+    c1: document.getElementById('c1').value, c2: document.getElementById('c2').value, c3: document.getElementById('c3').value
+  };
+
+  document.getElementById('mensaje').textContent = 'Enviando...';
+  try {
+    await fetch(WEBAPP_URL, { method: 'POST', body: JSON.stringify(datos), mode: 'no-cors' });
+    document.getElementById('encuesta').style.display = 'none';
+    document.getElementById('mensaje').textContent = '¡Gracias! Revisá tu email para confirmar y recibir tu código.';
+  } catch (err) {
+    document.getElementById('mensaje').textContent = 'Hubo un error, probá de nuevo.';
+  }
+});
+</script>
+</body>
+</html>
