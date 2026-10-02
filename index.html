@@ -27,23 +27,23 @@
 
   <fieldset>
     <legend>Empresa A</legend>
-    <label>Pregunta A1</label><input type="text" id="a1">
-    <label>Pregunta A2</label><input type="text" id="a2">
-    <label>Pregunta A3</label><input type="text" id="a3">
+    <label>Pregunta A1</label><input type="text" id="a1" required>
+    <label>Pregunta A2</label><input type="text" id="a2" required>
+    <label>Pregunta A3</label><input type="text" id="a3" required>
   </fieldset>
 
   <fieldset>
     <legend>Empresa B</legend>
-    <label>Pregunta B1</label><input type="text" id="b1">
-    <label>Pregunta B2</label><input type="text" id="b2">
-    <label>Pregunta B3</label><input type="text" id="b3">
+    <label>Pregunta B1</label><input type="text" id="b1" required>
+    <label>Pregunta B2</label><input type="text" id="b2" required>
+    <label>Pregunta B3</label><input type="text" id="b3" required>
   </fieldset>
 
   <fieldset>
     <legend>Empresa C</legend>
-    <label>Pregunta C1</label><input type="text" id="c1">
-    <label>Pregunta C2</label><input type="text" id="c2">
-    <label>Pregunta C3</label><input type="text" id="c3">
+    <label>Pregunta C1</label><input type="text" id="c1" required>
+    <label>Pregunta C2</label><input type="text" id="c2" required>
+    <label>Pregunta C3</label><input type="text" id="c3" required>
   </fieldset>
 
   <div class="consent">
@@ -56,7 +56,7 @@
 <div id="mensaje"></div>
 
 <script>
-const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwvMBEXKpLG8B2gzVLLZ-wgqkhIc9OeB4k_cdqtdDBEeXpmCyF0sxyrFSuvhpc3x0TL/exec'; // pegar acá la URL del Paso 4, una vez publicada
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwvMBEXKpLG8B2gzVLLZ-wgqkhIc9OeB4k_cdqtdDBEeXpmCyF0sxyrFSuvhpc3x0TL/exec';
 
 function getParam(name) {
   return new URLSearchParams(window.location.search).get(name) || '';
