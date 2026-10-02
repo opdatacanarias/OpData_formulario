@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Opdata — Mostrador</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<style>
+  body { font-family: sans-serif; max-width: 500px; margin: 20px auto; padding: 0 20px; text-align:center; }
+  #reader { width: 100%; margin-top:20px; }
+  input[type=text] { width:100%; padding:10px; margin-top:10px; box-sizing:border-box; font-size:18px; text-align:center; text-transform:uppercase; }
+  button { padding:12px 24px; margin-top:12px; font-size:16px; }
+</style>
+</head>
+<body>
+<h2>Escanear código de canje</h2>
+<div id="reader"></div>
+
+<p>¿No anda la cámara? Escribilo acá:</p>
+<input type="text" id="manual" placeholder="WD-XXXXX">
+<button onclick="irACodigo(document.getElementById('manual').value)">Validar</button>
+
+<script>
+const WEBAPP_URL = 'URL_DE_TU_WEB_APP'; // la misma URL del Paso 4
+
+function irACodigo(codigo) {
+  if (!codigo) return;
+  window.location.href = WEBAPP_URL + '?codigo=' + encodeURIComponent(codigo.trim());
+}
+
+const scanner = new Html5Qrcode("reader");
+scanner.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 250 },
+  (decodedText) => {
+    scanner.stop();
+    irACodigo(decodedText);
+  },
+  (errorMessage) => { /* ignorar frames sin código detectado */ }
+).catch((err) => {
+  document.getElementById('reader').innerHTML = '<p>No se pudo acceder a la cámara — usá el campo de texto.</p>';
+});
+</script>
+</body>
+</html>
