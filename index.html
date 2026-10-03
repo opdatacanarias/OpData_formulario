@@ -92,7 +92,7 @@
 
   <div class="consent">
     <input type="checkbox" id="consiente">
-    <label style="margin:0;font-weight:400">Acepto que mis datos se compartan con empresas colaboradoras según la <a href="POLITICA_URL" target="_blank">política de privacidad</a></label>
+    <label style="margin:0;font-weight:400">Acepto que mis datos se compartan con empresas colaboradoras según la <a href="POLITICA_URL" target="_blank">política de privacidad</a> (opcional — no afecta tu recompensa)</label>
   </div>
 
   <button type="submit">Enviar</button>
@@ -109,11 +109,6 @@ function getParam(name) {
 
 document.getElementById('encuesta').addEventListener('submit', async function(e) {
   e.preventDefault();
-
-  if (!document.getElementById('consiente').checked) {
-    alert('Necesitás aceptar el consentimiento para continuar.');
-    return;
-  }
 
   const telefono = document.getElementById('telefono').value.trim();
   if (!TEL_REGEX.test(telefono)) {
@@ -132,7 +127,7 @@ document.getElementById('encuesta').addEventListener('submit', async function(e)
     telefono: telefono,
     email: document.getElementById('email').value,
     local: getParam('local'),
-    consiente: true,
+    consiente: document.getElementById('consiente').checked,
     ip: ip,
     a1: document.getElementById('a1').value, a2: document.getElementById('a2').value, a3: document.getElementById('a3').value,
     b1: document.getElementById('b1').value, b2: document.getElementById('b2').value, b3: document.getElementById('b3').value,
@@ -155,10 +150,10 @@ document.getElementById('encuesta').addEventListener('submit', async function(e)
     } else if (resultado.motivo === 'ya_registrado') {
       mensaje.textContent = 'Este email o teléfono ya participó antes — solo se puede completar una vez.';
     } else {
-      mensaje.textContent = 'No se pudo procesar tu respuesta, prueba de nuevo.';
+      mensaje.textContent = 'No se pudo procesar tu respuesta, probá de nuevo.';
     }
   } catch (err) {
-    mensaje.textContent = 'Hubo un error de conexión, prueba de nuevo.';
+    mensaje.textContent = 'Hubo un error de conexión, probá de nuevo.';
   }
 });
 </script>
