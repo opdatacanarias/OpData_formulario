@@ -9,15 +9,18 @@
   #reader { width: 100%; margin-top:20px; }
   input[type=text] { width:100%; padding:10px; margin-top:10px; box-sizing:border-box; font-size:18px; text-align:center; text-transform:uppercase; }
   button { padding:12px 24px; margin-top:12px; font-size:16px; }
+  details { margin-top:24px; text-align:left; }
 </style>
 </head>
 <body>
-<h2>Escanear código de canje</h2>
-<div id="reader"></div>
+<h2>Escanear código de barras</h2>
+<p>Apuntá el lector de la caja al código y leé — se valida solo.</p>
+<input type="text" id="manual" placeholder="Esperando lectura…" autofocus>
 
-<p>¿No anda la cámara? Escribilo acá:</p>
-<input type="text" id="manual" placeholder="WD-XXXXX">
-<button onclick="irACodigo(document.getElementById('manual').value)">Validar</button>
+<details>
+<summary>¿No tenés lector físico? Usar la cámara</summary>
+<div id="reader" style="margin-top:12px"></div>
+</details>
 
 <script>
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwvMBEXKpLG8B2gzVLLZ-wgqkhIc9OeB4k_cdqtdDBEeXpmCyF0sxyrFSuvhpc3x0TL/exec';
@@ -27,17 +30,35 @@ function irACodigo(codigo) {
   window.location.href = WEBAPP_URL + '?codigo=' + encodeURIComponent(codigo.trim());
 }
 
-const scanner = new Html5Qrcode("reader");
-scanner.start(
-  { facingMode: "environment" },
-  { fps: 10, qrbox: 250 },
-  (decodedText) => {
-    scanner.stop();
-    irACodigo(decodedText);
-  },
-  (errorMessage) => { /* ignorar frames sin código detectado */ }
-).catch((err) => {
-  document.getElementById('reader').innerHTML = '<p>No se pudo acceder a la cámara — usá el campo de texto.</p>';
+// Un lector de código de barras físico (USB o Bluetooth) actúa como un teclado:
+// escribe el código en el campo enfocado y al final manda un "Enter" solo.
+const input = document.getElementById('manual');
+input.focus();
+input.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    irACodigo(input.value);
+  }
+});
+// Si la pantalla pierde el foco (el dependiente tocó otra cosa), lo recupera solo
+// para que el próximo escaneo funcione sin tener que tocar el campo de nuevo.
+document.addEventListener('click', function() { input.focus(); });
+
+// Cámara, solo como alternativa si no hay lector físico
+let scannerIniciado = false;
+document.querySelector('details').addEventListener('toggle', function(e) {
+  if (e.target.open && !scannerIniciado) {
+    scannerIniciado = true;
+    const scanner = new Html5Qrcode("reader");
+    scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      (decodedText) => { scanner.stop(); irACodigo(decodedText); },
+      (errorMessage) => { /* ignorar frames sin código detectado */ }
+    ).catch((err) => {
+      document.getElementById('reader').innerHTML = '<p>No se pudo acceder a la cámara.</p>';
+    });
+  }
 });
 </script>
 </body>
