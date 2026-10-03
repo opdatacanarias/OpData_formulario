@@ -2,44 +2,88 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Opdata — Encuesta</title>
 <style>
-  body { font-family: sans-serif; max-width: 500px; margin: 40px auto; padding: 0 20px; }
-  label { display:block; margin-top:16px; font-weight:bold; }
-  input[type=text], input[type=email], input[type=tel] { width:100%; padding:8px; margin-top:4px; box-sizing:border-box; }
-  fieldset { margin-top:24px; border:1px solid #ccc; padding:12px; }
-  .consent { margin-top:24px; }
-  button { margin-top:24px; padding:12px 24px; }
-  #mensaje { margin-top:24px; font-weight:bold; }
+  /* ── PERSONALIZACIÓN DE MARCA: cambiá estos valores ── */
+  :root {
+    --color-primario: #2563eb;      /* color principal (botón, acentos) */
+    --color-fondo: #f8fafc;
+    --color-texto: #1e293b;
+    --color-tarjeta-a: #2563eb;     /* color de borde de la sección Empresa A */
+    --color-tarjeta-b: #16a34a;     /* color de borde de la sección Empresa B */
+    --color-tarjeta-c: #d97706;     /* color de borde de la sección Empresa C */
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+    max-width: 480px; margin: 0 auto; padding: 24px 20px 60px;
+    background: var(--color-fondo); color: var(--color-texto);
+  }
+  /* LOGO: descomentá el <img> en el body y subí tu archivo logo.png junto a index.html */
+  .logo { display:block; max-width:160px; margin:0 auto 20px; }
+  h2 { text-align:center; margin-bottom:4px; }
+  .subtitulo { text-align:center; color:#64748b; font-size:14px; margin-bottom:24px; }
+  label { display:block; margin-top:14px; font-weight:600; font-size:14px; }
+  input[type=text], input[type=email], input[type=tel] {
+    width:100%; padding:10px 12px; margin-top:6px; border:1px solid #cbd5e1;
+    border-radius:8px; font-size:16px; background:#fff;
+  }
+  input:invalid:not(:placeholder-shown) { border-color:#dc2626; }
+  small.ayuda { color:#64748b; font-size:12px; }
+  .tarjeta {
+    margin-top:22px; background:#fff; border-radius:12px; padding:16px;
+    border-left:5px solid #ccc; box-shadow:0 1px 3px rgba(0,0,0,0.08);
+  }
+  .tarjeta.a { border-left-color: var(--color-tarjeta-a); }
+  .tarjeta.b { border-left-color: var(--color-tarjeta-b); }
+  .tarjeta.c { border-left-color: var(--color-tarjeta-c); }
+  .tarjeta legend { font-weight:700; padding:0 4px; }
+  .consent { margin-top:22px; display:flex; gap:10px; align-items:flex-start; font-size:14px; }
+  .consent input { margin-top:3px; }
+  button {
+    width:100%; margin-top:24px; padding:14px; font-size:16px; font-weight:700;
+    background:var(--color-primario); color:#fff; border:none; border-radius:10px;
+    cursor:pointer;
+  }
+  button:active { opacity:0.85; }
+  #mensaje { margin-top:20px; font-weight:600; text-align:center; }
 </style>
 </head>
 <body>
+<!-- LOGO: descomentá esta línea y subí logo.png junto a index.html
+<img class="logo" src="logo.png" alt="Opdata">
+-->
 <h2>Encuesta Opdata</h2>
+<p class="subtitulo">Completá tus datos y ganá tu recompensa</p>
+
 <form id="encuesta">
   <label>Nombre</label>
   <input type="text" id="nombre" required>
 
   <label>Teléfono</label>
-  <input type="tel" id="telefono" required>
+  <input type="tel" id="telefono" placeholder="+34-612 345 678"
+         pattern="\+\d{1,3}-\d{3} \d{3} \d{3}" required>
+  <small class="ayuda">Formato: +xx-xxx xxx xxx (código de país, guion, número con espacios)</small>
 
   <label>Email</label>
   <input type="email" id="email" required>
 
-  <fieldset>
+  <fieldset class="tarjeta a">
     <legend>Empresa A</legend>
     <label>Pregunta A1</label><input type="text" id="a1" required>
     <label>Pregunta A2</label><input type="text" id="a2" required>
     <label>Pregunta A3</label><input type="text" id="a3" required>
   </fieldset>
 
-  <fieldset>
+  <fieldset class="tarjeta b">
     <legend>Empresa B</legend>
     <label>Pregunta B1</label><input type="text" id="b1" required>
     <label>Pregunta B2</label><input type="text" id="b2" required>
     <label>Pregunta B3</label><input type="text" id="b3" required>
   </fieldset>
 
-  <fieldset>
+  <fieldset class="tarjeta c">
     <legend>Empresa C</legend>
     <label>Pregunta C1</label><input type="text" id="c1" required>
     <label>Pregunta C2</label><input type="text" id="c2" required>
@@ -48,7 +92,7 @@
 
   <div class="consent">
     <input type="checkbox" id="consiente">
-    <label style="display:inline">Acepto que mis datos se compartan con empresas colaboradoras según la <a href="POLITICA_URL" target="_blank">política de privacidad</a></label>
+    <label style="margin:0;font-weight:400">Acepto que mis datos se compartan con empresas colaboradoras según la <a href="POLITICA_URL" target="_blank">política de privacidad</a></label>
   </div>
 
   <button type="submit">Enviar</button>
@@ -57,6 +101,7 @@
 
 <script>
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwvMBEXKpLG8B2gzVLLZ-wgqkhIc9OeB4k_cdqtdDBEeXpmCyF0sxyrFSuvhpc3x0TL/exec';
+const TEL_REGEX = /^\+\d{1,3}-\d{3} \d{3} \d{3}$/;
 
 function getParam(name) {
   return new URLSearchParams(window.location.search).get(name) || '';
@@ -64,8 +109,15 @@ function getParam(name) {
 
 document.getElementById('encuesta').addEventListener('submit', async function(e) {
   e.preventDefault();
+
   if (!document.getElementById('consiente').checked) {
     alert('Necesitás aceptar el consentimiento para continuar.');
+    return;
+  }
+
+  const telefono = document.getElementById('telefono').value.trim();
+  if (!TEL_REGEX.test(telefono)) {
+    alert('El teléfono tiene que tener el formato +xx-xxx xxx xxx (ej. +34-612 345 678).');
     return;
   }
 
@@ -77,7 +129,7 @@ document.getElementById('encuesta').addEventListener('submit', async function(e)
 
   const datos = {
     nombre: document.getElementById('nombre').value,
-    telefono: document.getElementById('telefono').value,
+    telefono: telefono,
     email: document.getElementById('email').value,
     local: getParam('local'),
     consiente: true,
@@ -87,13 +139,26 @@ document.getElementById('encuesta').addEventListener('submit', async function(e)
     c1: document.getElementById('c1').value, c2: document.getElementById('c2').value, c3: document.getElementById('c3').value
   };
 
-  document.getElementById('mensaje').textContent = 'Enviando...';
+  const mensaje = document.getElementById('mensaje');
+  mensaje.textContent = 'Enviando...';
+
   try {
-    await fetch(WEBAPP_URL, { method: 'POST', body: JSON.stringify(datos), mode: 'no-cors' });
-    document.getElementById('encuesta').style.display = 'none';
-    document.getElementById('mensaje').textContent = '¡Gracias! Revisá tu email para confirmar y recibir tu código.';
+    const resp = await fetch(WEBAPP_URL, {
+      method: 'POST',
+      body: JSON.stringify(datos)
+    });
+    const resultado = await resp.json();
+
+    if (resultado.ok) {
+      document.getElementById('encuesta').style.display = 'none';
+      mensaje.textContent = '¡Gracias! Revisá tu email para confirmar y recibir tu código.';
+    } else if (resultado.motivo === 'ya_registrado') {
+      mensaje.textContent = 'Este email o teléfono ya participó antes — solo se puede completar una vez.';
+    } else {
+      mensaje.textContent = 'No se pudo procesar tu respuesta, prueba de nuevo.';
+    }
   } catch (err) {
-    document.getElementById('mensaje').textContent = 'Hubo un error, probá de nuevo.';
+    mensaje.textContent = 'Hubo un error de conexión, prueba de nuevo.';
   }
 });
 </script>
